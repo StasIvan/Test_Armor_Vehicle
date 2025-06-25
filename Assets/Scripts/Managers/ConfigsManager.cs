@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Base;
 using Configs;
-using Configs.Base;
 using Configs.BulletConfig;
 using Configs.EnemyConfig;
 using Configs.GameConfig;
 using Configs.PlayerConfig;
 using Cysharp.Threading.Tasks;
 using Interfaces;
-using UnityEngine;
 
 namespace Managers
 {

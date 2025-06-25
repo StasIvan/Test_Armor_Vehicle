@@ -2,6 +2,7 @@
 using Configs.GameConfig;
 using GameItems.EnemyItem;
 using Interfaces;
+using Pool;
 using UnityEngine;
 
 namespace Handlers
@@ -42,7 +43,7 @@ namespace Handlers
             {
                 Vector2 randomCircle = Random.insideUnitCircle * config.levelSize;
                 Vector3 candidatePosition = new Vector3(randomCircle.x, 0f, randomCircle.y) +
-                                            new Vector3(0, config.levelSize.y / 2f, 0);
+                                            Vector3.forward * (config.levelSize.y);
                 Quaternion rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
                 if (IsFarEnough(candidatePosition))
                 {

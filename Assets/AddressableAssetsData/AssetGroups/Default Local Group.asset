@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PlayerConfigs
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4dbc333114e97ff43ac332c0ccfee392
+    m_Address: Assets/Configs/GameConfigs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GameConfigs
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4e1de7e0dc9110c42b5ad4c7ab0aa606
     m_Address: EnemyConfigs
     m_ReadOnly: 0
