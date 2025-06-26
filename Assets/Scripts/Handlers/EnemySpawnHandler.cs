@@ -15,7 +15,7 @@ namespace Handlers
         private List<EnemyItem> _items = new();
         private readonly float _minDistance = 2f;
         private readonly float _minDistanceSquared;
-
+        private readonly float _offset = 10f;
         public EnemySpawnHandler(ISpawner spawner, IConfigManager configManager)
         {
             _spawner = spawner;
@@ -26,7 +26,7 @@ namespace Handlers
 
         public void Execute()
         {
-            _spawner.ReleaseAll();
+            _spawner.ReleaseAllComponents<EnemyItem>();
 
             GameConfig config = _configManager.GetConfig<GameConfigs, GameConfig>();
 
@@ -41,14 +41,18 @@ namespace Handlers
 
             while (placed < config.enemyCount && attempts < maxAttempts)
             {
-                Vector2 randomCircle = Random.insideUnitCircle * config.levelSize;
+                Vector2 randomCircle =
+                    Random.insideUnitCircle * new Vector2(config.levelSize.x, (config.levelSize.y / 2f) - _offset);
+                
                 Vector3 candidatePosition = new Vector3(randomCircle.x, 0f, randomCircle.y) +
-                                            Vector3.forward * (config.levelSize.y);
+                                            Vector3.forward * (config.levelSize.y / 2f);
+                
                 Quaternion rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+                
                 if (IsFarEnough(candidatePosition))
                 {
                     var item = _spawner.GetItem<EnemyItem>(candidatePosition, rotation);
-                    //item.Init(_managers, candidatePosition);
+                    item.Initialize();
                     _items.Add(item);
                     placed++;
                 }

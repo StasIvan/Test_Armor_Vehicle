@@ -8,5 +8,6 @@ namespace Configs
     {
         public ItemType type;
         public float speed;
+        public float rotationSpeed;
     }
 }

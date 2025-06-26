@@ -1,10 +1,10 @@
 ﻿using System;
+using GameItems;
 using UnityEngine;
-using Zenject;
 
 namespace Pool
 {
-    public class PoolItem : MonoBehaviour, IPoolable<Vector3, IMemoryPool>, IDisposable
+    public class PoolItem : MonoBehaviour, IDisposable
     {
         [SerializeField] private PoolType _type;
 
@@ -13,24 +13,18 @@ namespace Pool
             get => _type;
         }
 
-        private IMemoryPool _pool;
-
-        public void OnSpawned(Vector3 position, IMemoryPool pool)
+        public void OnSpawned(Vector3 position, Quaternion rotation, Transform parent)
         {
-            _pool = pool;
+            transform.SetParent(parent);
             transform.position = position;
+            transform.rotation = rotation;
             gameObject.SetActive(true);
-        }
-
-        public void OnDespawned()
-        {
-            gameObject.SetActive(false);
-            _pool = null;
         }
 
         public void Dispose()
         {
-            _pool?.Despawn(this);
+            gameObject.GetComponent<BaseGameItem>().Dispose();
+            gameObject.SetActive(false);
         }
 
     }

@@ -16,5 +16,6 @@ MonoBehaviour:
     id: 0
     type: 2
     speed: 8
+    rotationSpeed: 360
     health: 50
     damage: 10

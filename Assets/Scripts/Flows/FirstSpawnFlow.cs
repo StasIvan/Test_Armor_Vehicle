@@ -19,9 +19,13 @@ namespace Flows
 
         public UniTask ExecuteFlow()
         {
-            IHandler handler = _container.Instantiate<EnemySpawnHandler>();
+            IHandler enemySpawnHandler = _container.Instantiate<EnemySpawnHandler>();
             
-            handler.Execute();
+            enemySpawnHandler.Execute();
+            
+            
+            IHandler playerSpawnHandler = _container.Instantiate<PlayerSpawnHandler>();
+            playerSpawnHandler.Execute();
             
             return UniTask.CompletedTask;
         }

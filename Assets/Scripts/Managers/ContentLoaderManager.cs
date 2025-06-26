@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Flows;
 using Installers;
 using Interfaces;
+using UnityEngine;
 using Zenject;
 
 namespace Managers
@@ -33,7 +34,7 @@ namespace Managers
             
             IFlowRunner startFlow = _container.Instantiate<LoadConfigsFlow>();
             await startFlow.ExecuteFlow();
-
+            
             IFlowRunner firstSpawnFlow = _container.Instantiate<FirstSpawnFlow>();
             await firstSpawnFlow.ExecuteFlow();
             

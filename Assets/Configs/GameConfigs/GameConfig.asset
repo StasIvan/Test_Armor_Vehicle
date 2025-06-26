@@ -15,4 +15,4 @@ MonoBehaviour:
   _config:
     id: 0
     levelSize: {x: 5, y: 150}
-    enemyCount: 50
+    enemyCount: 30

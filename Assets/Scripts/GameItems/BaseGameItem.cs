@@ -1,14 +1,31 @@
-﻿using Pool;
+﻿using System;
+using Configs;
+using Configs.PlayerConfig;
+using Interfaces;
+using Pool;
 using UnityEngine;
+using Zenject;
 
 namespace GameItems
 {
-    public abstract class BaseGameItem : MonoBehaviour
+    public abstract class BaseGameItem : MonoBehaviour, IDisposable
     {
-        public virtual void Initialize(Vector3 position, Quaternion rotation)
+        [SerializeField] protected Rigidbody _rigidbody;
+        protected IConfigManager Configs;
+        protected SignalBus SignalBus;
+        protected ISpawner _spawner;
+
+        [Inject]
+        public void Construct(IConfigManager configs, ISpawner spawner, SignalBus signalBus)
         {
-            transform.position = position;
-            transform.rotation = rotation;
+            Configs = configs;
+            SignalBus = signalBus;
+            _spawner = spawner;
         }
+
+        public abstract void Initialize();
+        public abstract void Dispose();
+
+        protected abstract void Release();
     }
 }

@@ -6,5 +6,6 @@ namespace Configs.PlayerConfig
     public class PlayerConfig : BaseObjectConfig
     {
         public float health;
+        public float bulletPerMinute;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Base;
 using GameItems;
 using Interfaces;
@@ -29,8 +30,8 @@ namespace Managers
 
         public T GetItem<T>(Vector3 position, Quaternion rotation) where T : BaseGameItem
         {
-            var item = _pool.GetMonoBehaviour<T>();
-            item.Initialize(position, rotation);
+            var item = _pool.GetMonoBehaviour<T>(position, rotation);
+            //item.Initialize(position, rotation);
             _poolItems.Add(item);
 
             return item.GetComponent<T>();
@@ -40,6 +41,24 @@ namespace Managers
         {
             _pool.ReleaseAll();
             _poolItems.Clear();
+        }
+
+        public void Release<T>(T component) where T : BaseGameItem
+        {
+            _pool.Release(component);
+            _poolItems.Remove(component);
+        }
+
+        public void ReleaseAllComponents<T>() where T : Component
+        {
+            var items = _poolItems.Where(v => v as T != null).ToArray();
+            
+            _pool.ReleaseAllComponents<T>();
+            
+            foreach (var item in items)
+            {
+                _poolItems.Remove(item);
+            }
         }
     }
 
