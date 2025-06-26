@@ -28,8 +28,9 @@ namespace Managers
 
         public void ChangeState(GameState state)
         {
+            Debug.Log(state);
             GameState = state;
-            _signalBus.Fire(new ChangeGameState() { State = GameState });
+            _signalBus.Fire(new ChangeGameStateSignal() { State = GameState });
         }
     }
 

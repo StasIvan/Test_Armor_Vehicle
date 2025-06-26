@@ -8,5 +8,6 @@ namespace Interfaces
         void ReleaseAll();
         void Release<T>(T component) where T : Component;
         void ReleaseAllComponents<T>() where T : Component;
+        void Dispose();
     }
 }

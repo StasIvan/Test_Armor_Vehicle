@@ -25,13 +25,14 @@ namespace Managers
 
         public override void Dispose()
         {
+            _pool.Dispose();
             _poolItems.Clear();
         }
 
         public T GetItem<T>(Vector3 position, Quaternion rotation) where T : BaseGameItem
         {
             var item = _pool.GetMonoBehaviour<T>(position, rotation);
-            //item.Initialize(position, rotation);
+            
             _poolItems.Add(item);
 
             return item.GetComponent<T>();
@@ -61,12 +62,5 @@ namespace Managers
             }
         }
     }
-
-    public enum ItemType
-    {
-        None,
-        Player,
-        Enemy,
-        Bullet
-    }
+    
 }

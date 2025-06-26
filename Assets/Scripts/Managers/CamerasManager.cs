@@ -23,12 +23,12 @@ namespace Managers
         
         public override void Initialize()
         {
-            _signalBus.Subscribe<ChangeGameState>(GameStateChanged);
+            _signalBus.Subscribe<ChangeGameStateSignal>(GameStateChanged);
         }
 
         public override void Dispose()
         {
-            _signalBus.Unsubscribe<ChangeGameState>(GameStateChanged);
+            _signalBus.Unsubscribe<ChangeGameStateSignal>(GameStateChanged);
         }
         
         public void Set(CarItem value)
@@ -47,9 +47,9 @@ namespace Managers
             }
         }
         
-        private void GameStateChanged(ChangeGameState gameState)
+        private void GameStateChanged(ChangeGameStateSignal gameStateSignal)
         {
-            switch (gameState.State)
+            switch (gameStateSignal.State)
             {
                 case GameState.Loading:
                     break;

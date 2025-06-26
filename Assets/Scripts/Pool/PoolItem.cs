@@ -6,13 +6,6 @@ namespace Pool
 {
     public class PoolItem : MonoBehaviour, IDisposable
     {
-        [SerializeField] private PoolType _type;
-
-        public PoolType Type
-        {
-            get => _type;
-        }
-
         public void OnSpawned(Vector3 position, Quaternion rotation, Transform parent)
         {
             transform.SetParent(parent);

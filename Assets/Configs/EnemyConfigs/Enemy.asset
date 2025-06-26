@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config:
     id: 0
-    type: 2
-    speed: 8
+    speed: 4
     rotationSpeed: 360
     health: 50
     damage: 10

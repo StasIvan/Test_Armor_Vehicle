@@ -17,22 +17,22 @@ namespace GameItems
         
         public void OnDrag(PointerEventData eventData)
         {
-            _signalBus.Fire(new OnDrag() { EventData = eventData});
+            _signalBus.Fire(new OnDragSignal() { EventData = eventData});
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            _signalBus.Fire(new OnEndDrag() { EventData = eventData});
+            _signalBus.Fire(new OnEndDragSignal() { EventData = eventData});
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            _signalBus.Fire(new OnPointerDown() { EventData = eventData});
+            _signalBus.Fire(new OnPointerDownSignal() { EventData = eventData});
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            _signalBus.Fire(new OnPointerUp() { EventData = eventData});
+            _signalBus.Fire(new OnPointerUpSignal() { EventData = eventData});
         }
     }
 }

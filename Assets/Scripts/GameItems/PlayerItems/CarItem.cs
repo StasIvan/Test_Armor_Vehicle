@@ -1,60 +1,57 @@
-﻿using System;
-using Configs;
-using Configs.GameConfig;
+﻿using Configs.GameConfig;
 using Configs.PlayerConfig;
-using DG.Tweening;
 using Installers;
 using Interfaces;
 using Managers;
-using UnityEngine;
-using Zenject;
 
 namespace GameItems.PlayerItems
 {
-    public class CarItem : BaseGameItem, IMovable, IDamageable
+    public class CarItem : BaseGameItem, IDamageable
     {
-        private PlayerConfig _playerConfig;
-        private GameConfig _gameConfig;
+        private GameItemHealth _health;
         
-        private Tween _tween;
-        private float _currentHealth;
-
+        private IMovable _movable;
+        
         public override void Initialize()
         {
-            _playerConfig = Configs.GetConfig<PlayerConfigs, PlayerConfig>();
-            _gameConfig = Configs.GetConfig<GameConfigs, GameConfig>();
-            _currentHealth = _playerConfig.health;
-            SignalBus.Subscribe<ChangeGameState>(OnGameStateChanged);
-        }
+            var playerConfig = Configs.GetConfig<PlayerConfigs, PlayerConfig>();
+            var gameConfig = Configs.GetConfig<GameConfigs, GameConfig>();
+            _health = new GameItemHealth(playerConfig.health);
+            _health.OnItemDead += OnItemDead;
 
+            _movable = new CarItemMove(SignalBus, transform, gameConfig.levelSize, playerConfig.speed);
+            
+            SignalBus.Subscribe<ChangeGameStateSignal>(OnGameStateChanged);
+            SignalBus.Fire(new OnChangePlayerStatusSignal() { Status = PlayerStatus.Live });
+        }
+        
         public override void Dispose()
         {
+            _health.OnItemDead += OnItemDead;
+            _health = null;
             Stop();
-            SignalBus.Unsubscribe<ChangeGameState>(OnGameStateChanged);
+            _movable = null;
+            SignalBus.Unsubscribe<ChangeGameStateSignal>(OnGameStateChanged);
         }
         
-        public void Move()
+        private void Move()
         {
-            KillTween();
-            Vector3 target = Vector3.forward * _gameConfig.levelSize.y;
-            _tween = transform.DOMove(target, _playerConfig.speed).SetSpeedBased();
+            _movable.Move();
         }
 
-        public void Stop()
+        private void Stop()
         {
-            KillTween();
+            _movable.Stop();
         }
 
-        private void KillTween()
+        public void TakeDamage(float amount)
         {
-            if (_tween == null) return;
-            _tween.Kill();
-            _tween = null;
+            _health.TakeDamage(amount);
         }
         
-        private void OnGameStateChanged(ChangeGameState gameState)
+        private void OnGameStateChanged(ChangeGameStateSignal gameStateSignal)
         {
-            switch (gameState.State)
+            switch (gameStateSignal.State)
             {
                 case GameState.Game:
                     Move();
@@ -67,18 +64,22 @@ namespace GameItems.PlayerItems
                     break;
             }
         }
-
-        public void TakeDamage(float amount)
-        {
-            _currentHealth = Mathf.Clamp(_currentHealth - amount, 0, _playerConfig.health);
-            
-            if(_currentHealth <= 0) 
-                Stop();
-        }
         
         protected override void Release()
         {
             _spawner.Release(this);
         }
+        
+        private void OnItemDead()
+        {
+            SignalBus.Fire(new OnChangePlayerStatusSignal() { Status = PlayerStatus.Dead });
+        }
+    }
+
+    public enum PlayerStatus
+    {
+        Live,
+        Dead,
+        Finished,
     }
 }

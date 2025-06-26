@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Pool
 {
-    public class MultiplyPool : IDisposable
+    public class MultiplyPool
     {
         private readonly GameObject[] _prefabs;
         private readonly Transform _content;
@@ -57,7 +57,7 @@ namespace Pool
             {
                 foreach (PoolItem instance in hashSet.Value)
                 {
-                    instance.gameObject.SetActive(false);
+                    instance.Dispose();
                     GetPool(hashSet.Key).Enqueue(instance);
                 }
             }
@@ -78,6 +78,8 @@ namespace Pool
 
         public void Dispose()
         {
+            ReleaseAll();
+            
             foreach (var queue in _pool.Values)
             {
                 foreach (PoolItem item in queue)

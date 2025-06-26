@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config:
     id: 0
-    type: 1
-    speed: 10
+    speed: 6
+    rotationSpeed: 0
     health: 100
     bulletPerMinute: 120

@@ -6,15 +6,7 @@ using Zenject;
 
 namespace Pool
 {
-    public enum PoolType
-    {
-        None,
-        Player,
-        Enemy,
-        Bullet
-    }
-    
-    public class MultiplyPoolComponent : MonoBehaviour, IPool, IDisposable
+    public class MultiplyPoolComponent : MonoBehaviour, IPool
     {
         [SerializeField] private GameObject[] _prefabs;
         [SerializeField] private Transform _content;
