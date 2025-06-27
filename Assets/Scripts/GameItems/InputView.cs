@@ -22,7 +22,7 @@ namespace GameItems
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            _signalBus.Fire(new OnEndDragSignal() { EventData = eventData});
+            _signalBus.Fire<OnEndDragSignal>();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -32,7 +32,7 @@ namespace GameItems
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            _signalBus.Fire(new OnPointerUpSignal() { EventData = eventData});
+            _signalBus.Fire<OnPointerUpSignal>();
         }
     }
 }

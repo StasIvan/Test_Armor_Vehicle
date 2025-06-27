@@ -7,6 +7,5 @@ namespace Configs
     public abstract class BaseObjectConfig : BaseConfig
     {
         public float speed;
-        public float rotationSpeed;
     }
 }

@@ -18,6 +18,8 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<GameManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<CamerasManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ShootManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WindowsManager>().AsSingle().NonLazy();
         }
     }
 }

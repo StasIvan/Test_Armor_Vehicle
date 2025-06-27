@@ -16,7 +16,9 @@ namespace Pool
 
         public void Dispose()
         {
-            gameObject.GetComponent<BaseGameItem>().Dispose();
+            if (this == null || gameObject == null) return;
+            
+            gameObject.GetComponent<BaseGameItem>()?.Dispose();
             gameObject.SetActive(false);
         }
 

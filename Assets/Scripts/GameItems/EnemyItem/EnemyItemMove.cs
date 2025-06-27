@@ -90,9 +90,9 @@ namespace GameItems.EnemyItem
                 );
 
                 offset = new Vector3(
-                    Mathf.Clamp(offset.x, -_levelSize.x, _levelSize.x),
+                    Mathf.Clamp(offset.x, -_levelSize.x / 2f, _levelSize.x / 2f),
                     0,
-                    Mathf.Clamp(offset.z, -_levelSize.y, _levelSize.y)
+                    Mathf.Clamp(offset.z, 0, _levelSize.y)
                 );
 
                 Vector3 destination = _transform.position + offset;
@@ -104,6 +104,7 @@ namespace GameItems.EnemyItem
                     ct
                 );
 
+                
                 _animationSetter.SetAnimation("IsRun", false);
                 await UniTask.Delay(
                     TimeSpan.FromSeconds(UnityEngine.Random.Range(_delayBetweenMove - 0.5f, _delayBetweenMove + 0.5f)),

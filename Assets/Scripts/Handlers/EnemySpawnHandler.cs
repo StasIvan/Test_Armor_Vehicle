@@ -42,7 +42,7 @@ namespace Handlers
             while (placed < config.enemyCount && attempts < maxAttempts)
             {
                 Vector2 randomCircle =
-                    Random.insideUnitCircle * new Vector2(config.levelSize.x, (config.levelSize.y / 2f) - _offset);
+                    Random.insideUnitCircle * new Vector2(config.levelSize.x / 2f, (config.levelSize.y / 2f) - _offset);
                 
                 Vector3 candidatePosition = new Vector3(randomCircle.x, 0f, randomCircle.y) +
                                             Vector3.forward * (config.levelSize.y / 2f);

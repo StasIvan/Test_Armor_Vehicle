@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: a70a3f039298f1a4d8336ac05723a53a
   m_currentHash:
     serializedVersion: 2
-    Hash: 3bf36d6e2dc335fdfb59873b3c72516e
+    Hash: a69c5db822f1cc0954fee8af9e302cbf
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -91,6 +91,7 @@ MonoBehaviour:
     - EnemyConfigs
     - BulletConfigs
     - GameConfigs
+    - WindowConfigs
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 5636e084233e8e04c9a2819a6d0fd983, type: 2}

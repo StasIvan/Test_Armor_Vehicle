@@ -1,4 +1,5 @@
-﻿using GameItems;
+﻿using Windows;
+using GameItems;
 using Zenject;
 
 namespace Installers
@@ -14,6 +15,7 @@ namespace Installers
         {
             Container.BindInterfacesAndSelfTo<InputView>().FromComponentInHierarchy().AsSingle();
             Container.BindInterfacesAndSelfTo<CamerasView>().FromComponentInHierarchy().AsSingle();
+            Container.BindInterfacesAndSelfTo<UICanvas>().FromComponentInHierarchy().AsSingle();
         }
     }
 }

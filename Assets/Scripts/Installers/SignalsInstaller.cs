@@ -23,6 +23,9 @@ namespace Installers
             Container.DeclareSignal<OnPointerUpSignal>();
             Container.DeclareSignal<OnContentLoadedSignal>();
             Container.DeclareSignal<OnChangePlayerStatusSignal>();
+            Container.DeclareSignal<OnCloseWindowSignal>();
+            Container.DeclareSignal<OnOpenWindowSignal>();
+            Container.DeclareSignal<OnCloseAllWindowSignal>();
         }
     }
 
@@ -38,7 +41,6 @@ namespace Installers
 
     public struct OnEndDragSignal
     {
-        public PointerEventData EventData;
     }
 
     public struct OnPointerDownSignal
@@ -48,7 +50,6 @@ namespace Installers
 
     public struct OnPointerUpSignal
     {
-        public PointerEventData EventData;
     }
 
     public struct OnContentLoadedSignal { }
@@ -56,5 +57,19 @@ namespace Installers
     public struct OnChangePlayerStatusSignal
     {
         public PlayerStatus Status;
+    }
+    
+    public struct OnCloseWindowSignal
+    {
+        public WindowType Type;
+    }
+    
+    public struct OnOpenWindowSignal
+    {
+        public WindowType Type;
+    }
+    
+    public struct OnCloseAllWindowSignal
+    {
     }
 }

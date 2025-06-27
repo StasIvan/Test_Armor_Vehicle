@@ -35,6 +35,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - EnemyConfigs
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c4f5cc4c6317cb468b25433872922e9
+    m_Address: Assets/Configs/WindowConfigs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - WindowConfigs
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f3bdbd4b4dd936b49ad0f761c9e1f452
     m_Address: BulletConfigs
     m_ReadOnly: 0

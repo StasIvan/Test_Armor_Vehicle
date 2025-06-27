@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config:
     id: 0
-    levelSize: {x: 5, y: 150}
+    levelSize: {x: 10, y: 150}
     enemyCount: 30
