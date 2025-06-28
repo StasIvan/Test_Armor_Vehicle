@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: a70a3f039298f1a4d8336ac05723a53a
+  m_SerializeEntries:
+  - m_GUID: 33d38963ccfb2b1439f1555f8cd883f1
+    m_Address: PlayerConfigs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlayerConfigs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4dbc333114e97ff43ac332c0ccfee392
+    m_Address: Assets/Configs/GameConfigs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GameConfigs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4e1de7e0dc9110c42b5ad4c7ab0aa606
+    m_Address: EnemyConfigs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - EnemyConfigs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c4f5cc4c6317cb468b25433872922e9
+    m_Address: Assets/Configs/WindowConfigs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - WindowConfigs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3bdbd4b4dd936b49ad0f761c9e1f452
+    m_Address: BulletConfigs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BulletConfigs
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 5ca8c27e00f9117418ddb465710de60e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fdc52430593a20640939265e4dccd9f3, type: 2}
+    - {fileID: 11400000, guid: 3b4b3b03b9919774986b9e0ee7d0c798, type: 2}
