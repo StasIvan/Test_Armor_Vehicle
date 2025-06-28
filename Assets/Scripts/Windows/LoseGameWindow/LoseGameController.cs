@@ -1,22 +1,25 @@
-﻿using Base.BaseWindow;
+﻿using Windows.BaseWindow;
+using Base.BaseWindow;
+using Interfaces;
+using Interfaces.ManagerInterfaces;
+using Managers;
 
 namespace Windows.LoseGameWindow
 {
     public class LoseGameController : ControllerBase<LoseGameModel, LoseGameView>
     {
-        protected override LoseGameModel CreateModel()
+        public LoseGameController(WindowType type, LoseGameModel model, LoseGameView view, IWindowManager windowManager) : base(type, model, view, windowManager)
         {
-            return new LoseGameModel { IsVisible = false };
         }
 
         protected override void RegisterViewEvents()
         {
-            view.OnCloseClicked += Close;
+            View.OnCloseClicked += Close;
         }
 
         protected override void UnregisterViewEvents()
         {
-            view.OnCloseClicked -= Close;
+            View.OnCloseClicked -= Close;
         }
         
         protected override void OnShow()

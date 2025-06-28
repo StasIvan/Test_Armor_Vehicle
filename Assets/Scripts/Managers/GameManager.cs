@@ -4,7 +4,8 @@ using Cysharp.Threading.Tasks;
 using GameItems.PlayerItems;
 using Installers;
 using Interfaces;
-using UnityEngine;
+using Interfaces.ManagerInterfaces;
+using Managers.Base;
 using Zenject;
 
 namespace Managers
@@ -24,22 +25,21 @@ namespace Managers
         
         public override void Initialize()
         {
-            _signalBus.Subscribe<OnContentLoadedSignal>(ContentLoaded);
+            _signalBus.Subscribe<OnGameItemsSpawnedSignal>(OnGameItemsSpawned);
             _signalBus.Subscribe<OnChangePlayerStatusSignal>(ChangePlayerStatus);
+            _signalBus.Subscribe<ChangeGameStateSignal>(OnChangeGameState);
             _signalBus.Subscribe<OnCloseWindowSignal>(CloseWindow);
         }
-        
 
         public override void Dispose()
         {
-            _signalBus.Unsubscribe<OnContentLoadedSignal>(ContentLoaded);
+            _signalBus.Unsubscribe<OnGameItemsSpawnedSignal>(OnGameItemsSpawned);
             _signalBus.Unsubscribe<OnChangePlayerStatusSignal>(ChangePlayerStatus);
             _signalBus.Unsubscribe<OnCloseWindowSignal>(CloseWindow);
         }
         
-        private void ContentLoaded()
+        private void OnGameItemsSpawned()
         {
-            _windowManager.Open(WindowType.StartGameWindow);
             _stateManager.ChangeState(GameState.Start);
         }
         
@@ -47,15 +47,27 @@ namespace Managers
         {
             switch (statusSignal.Status)
             {
-                case PlayerStatus.Live:
-                    break;
                 case PlayerStatus.Dead:
-                    _windowManager.Open(WindowType.LoseGameWindow);
                     _stateManager.ChangeState(GameState.Lose);
                     break;
                 case PlayerStatus.Finished:
-                    _windowManager.Open(WindowType.WinGameWindow);
                     _stateManager.ChangeState(GameState.Win);
+                    break;
+            }
+        }
+        
+        private void OnChangeGameState(ChangeGameStateSignal gameState)
+        {
+            switch (gameState.State)
+            {
+                case GameState.Start:
+                    _windowManager.Open(WindowType.StartGameWindow);
+                    break;
+                case GameState.Lose:
+                    _windowManager.Open(WindowType.LoseGameWindow);
+                    break;
+                case GameState.Win:
+                    _windowManager.Open(WindowType.WinGameWindow);
                     break;
             }
         }

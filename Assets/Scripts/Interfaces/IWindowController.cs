@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using Base.BaseWindow;
+using Managers;
 
 namespace Interfaces
 {

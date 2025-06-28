@@ -9,6 +9,7 @@ using Configs.GameConfig;
 using Configs.PlayerConfig;
 using Cysharp.Threading.Tasks;
 using Interfaces;
+using Managers.Base;
 
 namespace Managers
 {

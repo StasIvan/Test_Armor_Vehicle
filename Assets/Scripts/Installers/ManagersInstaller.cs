@@ -1,4 +1,7 @@
-﻿using Managers;
+﻿using Windows;
+using Windows.ControllerFactories;
+using Interfaces;
+using Managers;
 using Zenject;
 
 namespace Installers
@@ -19,6 +22,14 @@ namespace Installers
             Container.BindInterfacesAndSelfTo<GameManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<CamerasManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ShootManager>().AsSingle();
+            //Container.BindInterfacesAndSelfTo<WindowsManager>().AsSingle().NonLazy();
+            
+            Container.BindInterfacesAndSelfTo<StartGameWindowFactory>()
+                .AsSingle();
+            Container.BindInterfacesAndSelfTo<LoseGameWindowFactory>()
+                .AsSingle();
+            Container.BindInterfacesAndSelfTo<WinGameWindowFactory>()
+                .AsSingle();
             Container.BindInterfacesAndSelfTo<WindowsManager>().AsSingle().NonLazy();
         }
     }

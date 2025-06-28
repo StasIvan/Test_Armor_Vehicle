@@ -7,7 +7,7 @@ namespace GameItems.EnemyItem
 {
     public class EnemySeeker : MonoBehaviour
     {
-        [SerializeReference] private EnemyItem _item;
+        [SerializeField] private EnemyItem _item;
         
         private void OnTriggerEnter(Collider other)
         {

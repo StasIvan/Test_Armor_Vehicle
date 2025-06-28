@@ -14,14 +14,9 @@ namespace GameItems
 
         public void SetAnimation(string name, bool value)
         {
-            try
-            {
-                _animator.SetBool(name, value);
-            }
-            catch (MissingReferenceException)
-            {
-                return;
-            }
+            if (_animator == null) return;
+            
+            _animator.SetBool(name, value);
         }
     }
 }

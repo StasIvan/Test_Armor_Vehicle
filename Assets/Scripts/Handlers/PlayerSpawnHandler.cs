@@ -1,4 +1,5 @@
-﻿using GameItems.PlayerItems;
+﻿using Cysharp.Threading.Tasks;
+using GameItems.PlayerItems;
 using Interfaces;
 using UnityEngine;
 
@@ -17,12 +18,13 @@ namespace Handlers
             _carSetter = carSetter;
         }
         
-        public void Execute()
+        public UniTask Execute()
         {
             _spawner.ReleaseAllComponents<CarItem>();
             var item = _spawner.GetItem<CarItem>(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
             item.Initialize();
             _carSetter.Set(item);
+            return UniTask.CompletedTask;
         }
     }
 }

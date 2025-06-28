@@ -8,26 +8,23 @@ using Zenject;
 
 namespace Flows
 {
-    public class FirstSpawnFlow : IFlowRunner
+    public class SpawnGameObjectsFlow : IFlowRunner
     {
         private readonly DiContainer _container;
         
-        public FirstSpawnFlow(DiContainer container)
+        public SpawnGameObjectsFlow(DiContainer container)
         {
             _container = container;
         }
 
-        public UniTask ExecuteFlow()
+        public async UniTask ExecuteFlow()
         {
-            IHandler enemySpawnHandler = _container.Instantiate<EnemySpawnHandler>();
-            
-            enemySpawnHandler.Execute();
-            
-            
             IHandler playerSpawnHandler = _container.Instantiate<PlayerSpawnHandler>();
             playerSpawnHandler.Execute();
             
-            return UniTask.CompletedTask;
+            IHandler enemySpawnHandler = _container.Instantiate<EnemySpawnHandler>();
+            
+            await enemySpawnHandler.Execute();
         }
 
         

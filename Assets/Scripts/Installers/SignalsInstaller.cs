@@ -26,6 +26,7 @@ namespace Installers
             Container.DeclareSignal<OnCloseWindowSignal>();
             Container.DeclareSignal<OnOpenWindowSignal>();
             Container.DeclareSignal<OnCloseAllWindowSignal>();
+            Container.DeclareSignal<OnGameItemsSpawnedSignal>();
         }
     }
 
@@ -53,7 +54,9 @@ namespace Installers
     }
 
     public struct OnContentLoadedSignal { }
-
+    
+    public struct OnGameItemsSpawnedSignal { }
+    
     public struct OnChangePlayerStatusSignal
     {
         public PlayerStatus Status;

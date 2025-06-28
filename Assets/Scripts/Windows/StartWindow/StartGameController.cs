@@ -1,22 +1,25 @@
-﻿using Base.BaseWindow;
+﻿using Windows.BaseWindow;
+using Base.BaseWindow;
+using Interfaces;
+using Interfaces.ManagerInterfaces;
+using Managers;
 
 namespace Windows.StartWindow
 {
     public class StartGameController: ControllerBase<StartGameModel, StartGameView>
     {
-        protected override StartGameModel CreateModel()
+        public StartGameController(WindowType type, StartGameModel model, StartGameView view, IWindowManager windowManager) : base(type, model, view, windowManager)
         {
-            return new StartGameModel { IsVisible = false };
         }
 
         protected override void RegisterViewEvents()
         {
-            view.OnCloseClicked += Close;
+            View.OnCloseClicked += Close;
         }
 
         protected override void UnregisterViewEvents()
         {
-            view.OnCloseClicked -= Close;
+            View.OnCloseClicked -= Close;
         }
         
         protected override void OnShow()

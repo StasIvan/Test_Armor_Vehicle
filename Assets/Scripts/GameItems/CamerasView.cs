@@ -11,13 +11,19 @@ using Zenject;
 
 namespace GameItems
 {
-    public class CamerasView : MonoBehaviour, IGettable<List<CameraItem>>
+    public class CamerasView : MonoBehaviour, IGettable<List<CameraItem>>, IMainCameraGetter
     {
+        [SerializeField] private Camera _mainCamera;
         [SerializeField] private List<CameraItem> _cameraItems;
         
         public List<CameraItem> Get()
         {
             return _cameraItems;
+        }
+
+        public Camera GetCamera()
+        {
+            return _mainCamera;
         }
     }
 

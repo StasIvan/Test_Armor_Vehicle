@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Base.BaseWindow
+namespace Windows.BaseWindow
 {
     public abstract class ModelBase
     {

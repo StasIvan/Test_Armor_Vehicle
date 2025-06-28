@@ -3,12 +3,13 @@ using Configs.PlayerConfig;
 using Installers;
 using Interfaces;
 using Managers;
+using UnityEngine;
 
 namespace GameItems.PlayerItems
 {
     public class CarItem : BaseGameItem, IDamageable
     {
-        private GameItemHealth _health;
+        [SerializeField] private GameItemHealth _health;
         
         private IMovable _movable;
         
@@ -16,7 +17,7 @@ namespace GameItems.PlayerItems
         {
             var playerConfig = Configs.GetConfig<PlayerConfigs, PlayerConfig>();
             var gameConfig = Configs.GetConfig<GameConfigs, GameConfig>();
-            _health = new GameItemHealth(playerConfig.health);
+            _health.Initialize(playerConfig.health);
             _health.OnItemDead += OnItemDead;
 
             _movable = new CarItemMove(SignalBus, transform, gameConfig.levelSize, playerConfig.speed);
@@ -28,10 +29,15 @@ namespace GameItems.PlayerItems
         public override void Dispose()
         {
             _health.OnItemDead += OnItemDead;
-            _health = null;
+            _health.Dispose();
             Stop();
             _movable = null;
             SignalBus.Unsubscribe<ChangeGameStateSignal>(OnGameStateChanged);
+        }
+        
+        public void TakeDamage(float amount)
+        {
+            _health.TakeDamage(amount);
         }
         
         private void Move()
@@ -43,11 +49,6 @@ namespace GameItems.PlayerItems
         {
             _movable.Stop();
         }
-
-        public void TakeDamage(float amount)
-        {
-            _health.TakeDamage(amount);
-        }
         
         private void OnGameStateChanged(ChangeGameStateSignal gameStateSignal)
         {
@@ -56,10 +57,7 @@ namespace GameItems.PlayerItems
                 case GameState.Game:
                     Move();
                     break;
-                case GameState.Loading:
-                case GameState.Start:
-                case GameState.Lose:
-                case GameState.Win:
+                default:
                     Stop();
                     break;
             }

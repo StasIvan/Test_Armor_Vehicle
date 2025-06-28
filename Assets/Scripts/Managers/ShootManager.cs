@@ -8,6 +8,7 @@ using GameItems.BulletItem;
 using GameItems.PlayerItems;
 using Installers;
 using Interfaces;
+using Managers.Base;
 using UnityEngine;
 using Zenject;
 

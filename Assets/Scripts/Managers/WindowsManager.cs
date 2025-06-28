@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 using Windows;
-using Base;
 using Configs.WindowConfig;
 using Cysharp.Threading.Tasks;
 using Installers;
 using Interfaces;
+using Interfaces.ManagerInterfaces;
+using Managers.Base;
 using Zenject;
-using Object = UnityEngine.Object;
 
 namespace Managers
 {
@@ -18,25 +19,32 @@ namespace Managers
         private readonly DiContainer _container;
         private readonly Transform _parent;
         private readonly Dictionary<WindowType, GameObject> _prefabMap;
-
+        private readonly Dictionary<WindowType, IWindowControllerFactory> _factories;
         private readonly Stack<IWindow> _stack = new Stack<IWindow>();
         private readonly Dictionary<WindowType, IWindow> _instances = new Dictionary<WindowType, IWindow>();
         private IWindow _current;
         
-        public WindowsManager(UICanvas uiCanvas, SignalBus signalBus, DiContainer container)
+        public WindowsManager(UICanvas uiCanvas, SignalBus signalBus, DiContainer container,IEnumerable<IWindowControllerFactory> factories)
         {
             _signalBus = signalBus;
             _container = container;
             _parent = uiCanvas.GetWindowsTransform();
+            
+            _factories = factories.ToDictionary(f => f.Type);
+            
             _prefabMap = new Dictionary<WindowType, GameObject>();
         }
 
         public override void Initialize()
         {
-            LoadConfigs().Forget();
         }
 
-        private async UniTask LoadConfigs()
+        public override void Dispose()
+        {
+            ClearStack();
+        }
+
+        public async UniTask LoadWindowContent()
         {
             var configs = new WindowConfigs();
             await configs.InitAsync();
@@ -47,16 +55,10 @@ namespace Managers
                     _prefabMap.Add(cfg.type, cfg.prefab);
             }
         }
-        
-        public override void Dispose()
-        {
-            ClearStack();
-        }
 
         public void Open(WindowType type)
         {
-            if (_current != null && _current.Type == type)
-                return;
+            if (_current?.Type == type) return;
 
             if (_current != null)
             {
@@ -64,24 +66,27 @@ namespace Managers
                 _stack.Push(_current);
             }
 
-            if (!_instances.TryGetValue(type, out var window))
+            if (!_instances.TryGetValue(type, out var controller))
             {
                 if (!_prefabMap.TryGetValue(type, out var prefab))
                     throw new ArgumentException($"No prefab for window type {type}");
-
+                
                 var go = _container.InstantiatePrefab(prefab, _parent);
                 
-                if (!(go.TryGetComponent<IWindow>(out window)))
-                    throw new InvalidOperationException($"Window prefab {prefab.name} must implement IWindow");
+                if (!_factories.TryGetValue(type, out var factory))
+                    throw new InvalidOperationException($"Factory for {type} not found");
 
-                _instances[type] = window;
+                controller = factory.Create(go, this);
+
+                _instances[type] = controller;
             }
+            
+            _current = controller;
 
-            _current = window;
             _current.ShowWindow();
-            _signalBus.Fire(new OnOpenWindowSignal() {Type = type});
+            _signalBus.Fire(new OnOpenWindowSignal { Type = type });
         }
-
+        
         public void Close()
         {
             if (_current == null)

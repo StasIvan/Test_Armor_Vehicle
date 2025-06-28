@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Configs.GameConfig;
+using Cysharp.Threading.Tasks;
 using GameItems.EnemyItem;
 using Interfaces;
 using Pool;
@@ -24,16 +25,16 @@ namespace Handlers
             _minDistanceSquared = _minDistance * _minDistance;
         }
 
-        public void Execute()
+        public async UniTask Execute()
         {
             _spawner.ReleaseAllComponents<EnemyItem>();
 
             GameConfig config = _configManager.GetConfig<GameConfigs, GameConfig>();
 
-            GetEnemies(config);
+            await GetEnemies(config);
         }
 
-        private void GetEnemies(GameConfig config)
+        private async UniTask GetEnemies(GameConfig config)
         {
             int placed = 0;
             int attempts = 0;
@@ -58,6 +59,9 @@ namespace Handlers
                 }
 
                 attempts++;
+                
+                if (placed % 10 == 0)
+                    await UniTask.NextFrame();
             }
         }
 

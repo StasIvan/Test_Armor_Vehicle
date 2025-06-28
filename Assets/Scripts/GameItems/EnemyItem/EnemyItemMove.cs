@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GameItems.EnemyItem
 {
-    public class EnemyItemMove : BaseItemMove, ISeekMovement
+    public class EnemyItemMove : ISeekMovement
     {
         private readonly float _patrolRadius = 2f;
         private readonly float _patrolSpeed = 1f;         
@@ -23,8 +23,6 @@ namespace GameItems.EnemyItem
         private CancellationTokenSource _cts;
         private Transform _target;
 
-        private bool _isStopped;
-        
         public EnemyItemMove(EnemyConfig config, Transform transform, Vector2 levelSize, Rigidbody rigidbody, IAnimationSetter animationSetter)
         {
             _speed = config.speed;
@@ -33,12 +31,10 @@ namespace GameItems.EnemyItem
             _levelSize = levelSize;
             _rigidbody = rigidbody;
             _animationSetter = animationSetter;
-            _isStopped = false;
         }
         
-        public override void Move()
+        public void Move()
         {
-            if (_isStopped) return;
             
             KillToken();
             _cts = new CancellationTokenSource();
@@ -46,7 +42,7 @@ namespace GameItems.EnemyItem
             RunBehaviorAsync(_cts.Token).Forget();
         }
 
-        public override void Stop()
+        public void Stop()
         {
             if (_animationSetter != null)
                 _animationSetter.SetAnimation("IsRun", false);
@@ -54,7 +50,6 @@ namespace GameItems.EnemyItem
             _rigidbody.velocity = Vector3.zero;
             
             KillToken();
-            _isStopped = true;
         }
 
         public void SetTarget(Transform target)

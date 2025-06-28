@@ -6,6 +6,7 @@ using GameItems;
 using GameItems.PlayerItems;
 using Installers;
 using Interfaces;
+using Managers.Base;
 using Zenject;
 
 namespace Managers

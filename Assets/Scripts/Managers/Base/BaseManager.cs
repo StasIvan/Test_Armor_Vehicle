@@ -1,7 +1,7 @@
 using System;
 using Zenject;
 
-namespace Base
+namespace Managers.Base
 {
     public abstract class BaseManager : IInitializable, IDisposable
     {

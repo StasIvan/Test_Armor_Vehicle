@@ -1,22 +1,25 @@
-﻿using Base.BaseWindow;
+﻿using Windows.BaseWindow;
+using Base.BaseWindow;
+using Interfaces;
+using Interfaces.ManagerInterfaces;
+using Managers;
 
 namespace Windows.WinGameWindow
 {
     public class WinGameController : ControllerBase<WinGameModel, WinGameView>
     {
-        protected override WinGameModel CreateModel()
+        public WinGameController(WindowType type, WinGameModel model, WinGameView view, IWindowManager windowManager) : base(type, model, view, windowManager)
         {
-            return new WinGameModel { IsVisible = false };
         }
 
         protected override void RegisterViewEvents()
         {
-            view.OnCloseClicked += Close;
+            View.OnCloseClicked += Close;
         }
 
         protected override void UnregisterViewEvents()
         {
-            view.OnCloseClicked -= Close;
+            View.OnCloseClicked -= Close;
         }
         
         protected override void OnShow()

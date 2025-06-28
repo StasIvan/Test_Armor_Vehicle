@@ -1,11 +1,12 @@
 ﻿using DG.Tweening;
 using Installers;
+using Interfaces;
 using UnityEngine;
 using Zenject;
 
 namespace GameItems.PlayerItems
 {
-    public class CarItemMove : BaseItemMove
+    public class CarItemMove : IMovable
     {
         private readonly SignalBus _signalBus;
         private readonly Transform _transform;
@@ -21,7 +22,7 @@ namespace GameItems.PlayerItems
             _speed = speed;
         }
         
-        public override void Move()
+        public void Move()
         {
             KillTween();
             Vector3 target = Vector3.forward * _levelSize.y;
@@ -29,7 +30,7 @@ namespace GameItems.PlayerItems
             _tween.OnComplete(() => _signalBus.Fire(new OnChangePlayerStatusSignal() { Status = PlayerStatus.Finished }));
         }
 
-        public override void Stop()
+        public void Stop()
         {
             KillTween();
         }

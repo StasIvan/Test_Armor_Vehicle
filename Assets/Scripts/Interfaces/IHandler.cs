@@ -1,7 +1,9 @@
-﻿namespace Interfaces
+﻿using Cysharp.Threading.Tasks;
+
+namespace Interfaces
 {
     public interface IHandler
     {
-        void Execute();
+        UniTask Execute();
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Threading;
-using Configs;
-using Configs.EnemyConfig;
+﻿using Configs.EnemyConfig;
 using Configs.GameConfig;
-using Cysharp.Threading.Tasks;
 using Installers;
 using Interfaces;
 using Managers;
@@ -16,20 +12,30 @@ namespace GameItems.EnemyItem
     {
         [SerializeField] private Animator _animator;
         
-        private GameItemHealth _health;
+        [SerializeField] private GameItemHealth _health;
+        [SerializeField] private Billboard _billboard;
 
         private EnemyItemMove _itemMove;
         
         private float _damage;
+        private DiContainer _container;
 
+        [Inject]
+        public void GetContainer(DiContainer container)
+        {
+            _container = container;
+        }
+        
         public override void Initialize()
         {
             var enemyConfig = Configs.GetConfig<EnemyConfigs, EnemyConfig>();
             var gameConfig = Configs.GetConfig<GameConfigs, GameConfig>();
+            _health.Initialize(enemyConfig.health);
 
+            _container.Inject(_billboard);
+            
             _damage = enemyConfig.damage;
             
-            _health = new GameItemHealth(enemyConfig.health);
             _health.OnItemDead += Release;
 
             _itemMove = new EnemyItemMove(enemyConfig, transform, gameConfig.levelSize, _rigidbody,
@@ -51,7 +57,7 @@ namespace GameItems.EnemyItem
         public override void Dispose()
         {
             _health.OnItemDead -= Release;
-            _health = null;
+            _health.Dispose();
             _itemMove.Stop();
             _itemMove = null;
             SignalBus.Unsubscribe<ChangeGameStateSignal>(ChangeGameState);
@@ -69,8 +75,7 @@ namespace GameItems.EnemyItem
                 case GameState.Game:
                     _itemMove.Move();
                     break;
-                case GameState.Lose:
-                case GameState.Win:
+                default:
                     _itemMove.Stop();
                     break;
             }
