@@ -4,17 +4,19 @@ using Base;
 using Configs.PlayerConfig;
 using Cysharp.Threading.Tasks;
 using GameItems;
+using GameItems.Base;
 using GameItems.BulletItem;
 using GameItems.PlayerItems;
 using Installers;
 using Interfaces;
+using Interfaces.ManagerInterfaces;
 using Managers.Base;
 using UnityEngine;
 using Zenject;
 
 namespace Managers
 {
-    public class ShootManager : BaseManager, ISettable<TurretItem>
+    public class ShootManager : BaseManager, ISettable<TurretView>
     {
         private readonly SignalBus _signalBus;
         private readonly IConfigManager _configManager;
@@ -23,7 +25,7 @@ namespace Managers
         private readonly float _rotationAngle = 180f;
         private readonly float _maxDragPosition = 900f;
         
-        private TurretItem _turretItem;
+        private TurretView _turretView;
         
         private float _currentRelativeAngle;
         
@@ -52,6 +54,7 @@ namespace Managers
                 case GameState.Win:
                     _signalBus.TryUnsubscribe<OnDragSignal>(OnDrag);
                     _signalBus.TryUnsubscribe<OnEndDragSignal>(OnEndDrag);
+                    StopShoot();
                     break;
                 case GameState.Game:
                     _signalBus.Subscribe<OnDragSignal>(OnDrag);
@@ -62,13 +65,15 @@ namespace Managers
 
         public override void Dispose()
         {
-            CancelSpawning();
+            StopShoot();
             _signalBus.TryUnsubscribe<ChangeGameStateSignal>(OnChangeGameState);
+            _signalBus.TryUnsubscribe<OnDragSignal>(OnDrag);
+            _signalBus.TryUnsubscribe<OnEndDragSignal>(OnEndDrag);
         }
 
-        public void Set(TurretItem value)
+        public void Set(TurretView value)
         {
-            _turretItem = value;
+            _turretView = value;
         }
         
         private void OnDrag(OnDragSignal dragSignal)
@@ -86,8 +91,8 @@ namespace Managers
 
             float newRelative = Mathf.Clamp(_currentRelativeAngle + rotationY, -_rotationAngle / 2f, _rotationAngle / 2f);
             float deltaToApply = newRelative - _currentRelativeAngle;
-            _turretItem.SetLineActive(true);
-            _turretItem.Rotate(deltaToApply);
+            _turretView.SetLineActive(true);
+            _turretView.Rotate(deltaToApply);
             
             _currentRelativeAngle = newRelative;
             
@@ -105,7 +110,7 @@ namespace Managers
 
         private void StopShoot()
         {
-            _turretItem.SetLineActive(false);
+            _turretView.SetLineActive(false);
             
             CancelSpawning();
         }
@@ -116,13 +121,11 @@ namespace Managers
 
             while (!ct.IsCancellationRequested)
             {
-                var spawnPos = _turretItem.GetSpawnBulletPosition();
-                    
-                var item = _spawner.GetItem<BulletItem>(spawnPos, Quaternion.identity);
-                item.Initialize();
-                item.SetDirection(-_turretItem.transform.up);
-                item.Move();
-                    
+                var spawnPos = _turretView.GetSpawnBulletPosition();
+
+                if (_spawner.GetItem(GameItemType.Bullet, spawnPos, Quaternion.identity) is BulletController item)
+                    item.Move(-_turretView.transform.up);
+
                 await UniTask.WaitForSeconds(intervalSec, cancellationToken: ct);
             }
         }

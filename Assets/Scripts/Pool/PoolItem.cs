@@ -18,7 +18,7 @@ namespace Pool
         {
             if (this == null || gameObject == null) return;
             
-            gameObject.GetComponent<BaseGameItem>()?.Dispose();
+            gameObject.GetComponent<IDisposable>()?.Dispose();
             gameObject.SetActive(false);
         }
 

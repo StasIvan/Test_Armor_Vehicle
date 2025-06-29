@@ -1,6 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
+using GameItems.Base;
 using GameItems.PlayerItems;
 using Interfaces;
+using Interfaces.ManagerInterfaces;
 using UnityEngine;
 
 namespace Handlers
@@ -8,21 +10,19 @@ namespace Handlers
     public class PlayerSpawnHandler : IHandler
     {
         private readonly ISpawner _spawner;
-        private readonly IConfigManager _configManager;
-        private readonly ISettable<CarItem> _carSetter;
+        private readonly ISettable<PlayerController> _carSetter;
 
-        public PlayerSpawnHandler(ISpawner spawner, IConfigManager configManager, ISettable<CarItem> carSetter)
+        public PlayerSpawnHandler(ISpawner spawner, ISettable<PlayerController> carSetter)
         {
             _spawner = spawner;
-            _configManager = configManager;
             _carSetter = carSetter;
         }
         
         public UniTask Execute()
         {
-            _spawner.ReleaseAllComponents<CarItem>();
-            var item = _spawner.GetItem<CarItem>(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
-            item.Initialize();
+            _spawner.ReleaseAllComponents<PlayerController>();
+            var item =
+                _spawner.GetItem(GameItemType.Player, Vector3.zero, Quaternion.Euler(0f, 180f, 0f)) as PlayerController;
             _carSetter.Set(item);
             return UniTask.CompletedTask;
         }

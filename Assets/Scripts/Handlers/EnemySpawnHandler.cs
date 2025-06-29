@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using Configs.GameConfig;
 using Cysharp.Threading.Tasks;
+using GameItems.Base;
 using GameItems.EnemyItem;
 using Interfaces;
+using Interfaces.ManagerInterfaces;
 using Pool;
 using UnityEngine;
 
@@ -13,7 +15,7 @@ namespace Handlers
         private readonly ISpawner _spawner;
         private readonly IConfigManager _configManager;
         private readonly int _attemptsMultiplier = 20;
-        private List<EnemyItem> _items = new();
+        private readonly List<EnemyController> _items = new();
         private readonly float _minDistance = 2f;
         private readonly float _minDistanceSquared;
         private readonly float _offset = 10f;
@@ -27,7 +29,7 @@ namespace Handlers
 
         public async UniTask Execute()
         {
-            _spawner.ReleaseAllComponents<EnemyItem>();
+            _spawner.ReleaseAllComponents<EnemyController>();
 
             GameConfig config = _configManager.GetConfig<GameConfigs, GameConfig>();
 
@@ -52,8 +54,7 @@ namespace Handlers
                 
                 if (IsFarEnough(candidatePosition))
                 {
-                    var item = _spawner.GetItem<EnemyItem>(candidatePosition, rotation);
-                    item.Initialize();
+                    var item = _spawner.GetItem(GameItemType.Enemy, candidatePosition, rotation) as EnemyController;
                     _items.Add(item);
                     placed++;
                 }
@@ -63,13 +64,15 @@ namespace Handlers
                 if (placed % 10 == 0)
                     await UniTask.NextFrame();
             }
+            
+            _items.Clear();
         }
 
         private bool IsFarEnough(Vector3 position)
         {
             foreach (var enemy in _items)
             {
-                if ((enemy.transform.position - position).sqrMagnitude < _minDistanceSquared)
+                if ((enemy.GetView<EnemyView>().transform.position - position).sqrMagnitude < _minDistanceSquared)
                     return false;
             }
 

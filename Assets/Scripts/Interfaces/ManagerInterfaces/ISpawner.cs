@@ -1,15 +1,14 @@
 ﻿using GameItems;
-using Pool;
+using GameItems.Base;
 using UnityEngine;
 
-namespace Interfaces
+namespace Interfaces.ManagerInterfaces
 {
     public interface ISpawner
     {
-        public T GetItem<T>(Vector3 position, Quaternion rotation) where T : BaseGameItem;
-
-        public void ReleaseAll();
-        public void Release<T>(T component) where T : BaseGameItem;
-        void ReleaseAllComponents<T>() where T : Component;
+        IItemController GetItem(GameItemType type, Vector3 position, Quaternion rotation);
+        void ReleaseAll();
+        void Release<T>(T component) where T : IItemController;
+        void ReleaseAllComponents<T>() where T : class, IItemController;
     }
 }

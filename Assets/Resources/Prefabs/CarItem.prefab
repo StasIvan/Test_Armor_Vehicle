@@ -201,7 +201,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0172760a7f7326648b3366750da23afc,
         type: 3}
       propertyPath: m_Name
-      value: car
+      value: CarItem
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0172760a7f7326648b3366750da23afc,
         type: 3}
@@ -223,15 +223,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0172760a7f7326648b3366750da23afc,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -6560583175626670520}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0172760a7f7326648b3366750da23afc,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7893512227712561657}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0172760a7f7326648b3366750da23afc,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8871034834765343039}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0172760a7f7326648b3366750da23afc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1860867263886562610}
   m_SourcePrefab: {fileID: 100100000, guid: 0172760a7f7326648b3366750da23afc, type: 3}
 --- !u!1 &1660529291991767628 stripped
 GameObject:
@@ -239,20 +239,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2002425380539066141}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-6560583175626670520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660529291991767628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a4ab9eb061d4de08d66ae63d7683bf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rigidbody: {fileID: 7893512227712561657}
-  _health: {fileID: 1968968298237357754}
 --- !u!54 &7893512227712561657
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -301,6 +287,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5027443, y: 0.8537852, z: 3.902995}
   m_Center: {x: -0.0021862388, y: 0.52687836, z: -0.050610542}
+--- !u!114 &1860867263886562610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660529291991767628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9753d582c5a4bef809d47d404d0cfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 7893512227712561657}
+  _health: {fileID: 1968968298237357754}
 --- !u!4 &2035822999235231990 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0172760a7f7326648b3366750da23afc,

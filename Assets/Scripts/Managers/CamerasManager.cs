@@ -11,7 +11,7 @@ using Zenject;
 
 namespace Managers
 {
-    public class CamerasManager : BaseManager, ISettable<CarItem>
+    public class CamerasManager : BaseManager, ISettable<PlayerController>
     {
         private readonly List<CameraItem> _cameraItems;
         private readonly SignalBus _signalBus;
@@ -32,17 +32,17 @@ namespace Managers
             _signalBus.Unsubscribe<ChangeGameStateSignal>(GameStateChanged);
         }
         
-        public void Set(CarItem value)
+        public void Set(PlayerController value)
         {
             foreach (var item in _cameraItems)
             {
                 switch (item.cameraType)
                 {
                     case CameraType.Start:
-                        item.virtualCamera.LookAt = value.transform;
+                        item.virtualCamera.LookAt = value.GetView<PlayerView>().transform;
                         break;
                     case CameraType.Follow:
-                        item.virtualCamera.Follow = value.transform;
+                        item.virtualCamera.Follow = value.GetView<PlayerView>().transform;
                         break;
                 }
             }
