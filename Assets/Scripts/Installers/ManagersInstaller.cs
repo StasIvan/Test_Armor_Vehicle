@@ -1,8 +1,4 @@
-﻿using Windows;
-using Windows.ControllerFactories;
-using Interfaces;
-using Managers;
-using Managers.SpawnManager;
+﻿using Core.Managers;
 using Zenject;
 
 namespace Installers

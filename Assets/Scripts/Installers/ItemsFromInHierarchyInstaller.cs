@@ -1,5 +1,5 @@
-﻿using Windows;
-using GameItems;
+﻿using Features.GameItems;
+using Features.Windows;
 using Zenject;
 
 namespace Installers

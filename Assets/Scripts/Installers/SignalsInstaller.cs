@@ -1,5 +1,5 @@
-﻿using GameItems.PlayerItems;
-using Managers;
+﻿using Core.Managers;
+using Features.GameItems.PlayerItems;
 using UnityEngine.EventSystems;
 using Zenject;
 

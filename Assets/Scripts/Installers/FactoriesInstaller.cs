@@ -1,5 +1,5 @@
-﻿using Windows.ControllerFactories;
-using Managers.SpawnManager.ItemControllerFactories;
+﻿using Core.Factories.ItemControllerFactories;
+using Core.Factories.WindowControllerFactories;
 using Zenject;
 
 namespace Installers
