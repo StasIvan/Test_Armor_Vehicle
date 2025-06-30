@@ -1,78 +1,25 @@
 ﻿using System;
 using Features.GameItems.Base;
+using UniRx;
 using UnityEngine;
 
 namespace Features.GameItems.EnemyItem
 {
     public class EnemyModel : BaseItemModel
     {
-        public override event Action<ChangedFields> OnChanged;
-
-        private Vector3 _position;
-        private Quaternion _rotation;
-        private (string, bool) _animation;
-        private float _health;
-        private float _maxHealth;
-
-        public float Health
-        {
-            get => _health;
-            set
-            {
-                _health = value;
-                OnChanged?.Invoke(ChangedFields.Health);
-            }
-        }
-
-        public float MaxHealth
-        {
-            get => _maxHealth;
-            set
-            {
-                _maxHealth = value;
-                OnChanged?.Invoke(ChangedFields.MaxHealth);
-            }
-        }
-
-        public float Speed { get; set; }
+        public ReactiveProperty<Vector3> Position;
+        public ReactiveProperty<float> Health;
+        public ReactiveProperty<float> MaxHealth;
+        public ReactiveProperty<float> Speed;
+        public ReactiveProperty<float> RotationSpeed;
+        public ReactiveProperty<float> Damage;
+        public ReactiveProperty<Quaternion> Rotation;
+        public readonly ReactiveProperty<(string, bool)> Animation = new();
+        public readonly Subject<Unit> OnResetSpeed = new();
         
-        public float RotationSpeed { get; set; }
-        
-        public float Damage { get; set; }
-
-        public Vector3 Position
-        {
-            get => _position;
-            set
-            {
-                _position = value;
-                OnChanged?.Invoke(ChangedFields.Position);
-            }
-        }
-
-        public Quaternion Rotation
-        {
-            get => _rotation;
-            set
-            {
-                _rotation = value;
-                OnChanged?.Invoke(ChangedFields.Rotation);
-            }
-        }
-
-        public (string, bool) Animation
-        {
-            get => _animation;
-            set
-            {
-                _animation = value;
-                OnChanged?.Invoke(ChangedFields.Animate);
-            }
-        }
-
         public void ResetSpeed()
         {
-            OnChanged?.Invoke(ChangedFields.ResetSpeed);
+            OnResetSpeed.OnNext(Unit.Default);
         }
         
     }

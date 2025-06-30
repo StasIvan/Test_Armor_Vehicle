@@ -27,9 +27,8 @@ namespace Core.Managers
 
         public override void Dispose()
         {
-            ReleaseControllers(_poolItems);
+            ReleaseAll();
             _pool.Dispose();
-            _poolItems.Clear();
         }
 
         public IItemController GetItem(GameItemType type, Vector3 position, Quaternion rotation) 

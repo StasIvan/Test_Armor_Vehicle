@@ -4,6 +4,7 @@ using Core.Managers;
 using Features.Configs.GameConfig;
 using Features.GameItems.Base;
 using Installers;
+using UniRx;
 using UnityEngine;
 
 namespace Features.GameItems.EnemyItem
@@ -12,15 +13,21 @@ namespace Features.GameItems.EnemyItem
     {
         private ISeekMoveController _moveController;
         public override GameItemType Type { get => GameItemType.Enemy; }
+        
         public override void Initialize()
         {
+            Disposables = new CompositeDisposable();
             SignalBus.Subscribe<ChangeGameStateSignal>(ChangeGameState);
+            
+            View.OnDealDamage.Subscribe(OnDealDamage).AddTo(Disposables);
+            View.OnFindTarget.Subscribe(SetTarget).AddTo(Disposables);
+            View.OnTakeDamage.Subscribe(TakeDamage).AddTo(Disposables);
         }
         
         public override void Dispose()
         {
             SignalBus.Unsubscribe<ChangeGameStateSignal>(ChangeGameState);
-            
+            Disposables.Dispose();
             ((IDisposable)_moveController)?.Dispose();
         }
 
@@ -30,10 +37,6 @@ namespace Features.GameItems.EnemyItem
             Model = model;
 
             CreateMoveController();
-
-            View.OnDealDamage += OnDealDamage;
-            View.OnFindTarget += SetTarget;
-            View.OnTakeDamage += TakeDamage;
         }
 
         private void CreateMoveController()
@@ -64,15 +67,15 @@ namespace Features.GameItems.EnemyItem
         
         private void TakeDamage(float amount)
         {
-            Model.Health = Mathf.Clamp(Model.Health - amount, 0, Model.MaxHealth);
+            Model.Health.Value = Mathf.Clamp(Model.Health.Value - amount, 0, Model.MaxHealth.Value);
 
-            if (Model.Health <= 0)
+            if (Model.Health.Value <= 0)
                 Release();
         }
         
         private void OnDealDamage(IDamageable target)
         {
-            target.TakeDamage(Model.Damage);
+            target.TakeDamage(Model.Damage.Value);
             Release();
         }
         

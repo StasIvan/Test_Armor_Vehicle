@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces;
 using Core.Interfaces.ManagerInterfaces;
+using UniRx;
 using Zenject;
 
 namespace Features.GameItems.Base
@@ -12,6 +13,7 @@ namespace Features.GameItems.Base
         protected ISpawner Spawner;
         protected IConfigManager ConfigManager;
         protected SignalBus SignalBus;
+        protected CompositeDisposable Disposables;
         
         [Inject]
         public void Construct(ISpawner spawner, IConfigManager configManager,  SignalBus signalBus)

@@ -1,31 +1,34 @@
 ﻿using System;
 using Core.Interfaces;
 using Features.GameItems.Base;
+using UniRx;
 using UnityEngine;
 
 namespace Features.GameItems.BulletItem
 {
     public class BulletView : BaseItemView<BulletModel>
     {
-        private BulletModel _model;
-        public event Action<IDamageable> OnDealDamage;
-        public override void OnModelChanged(ChangedFields field)
+        private readonly Subject<IDamageable> _onDealDamage = new();
+        public IObservable<IDamageable> OnDealDamage => _onDealDamage;
+        private CompositeDisposable _disposables;
+
+        public override void Initialize()
         {
-            if (field == ChangedFields.Position)
-                UpdateImpulse();
-            else if (field == ChangedFields.ResetSpeed)
-                ResetSpeed();
+            base.Initialize();
+            _disposables = new CompositeDisposable();
+            Model.OnResetSpeed.Subscribe(_ => ResetSpeed()).AddTo(_disposables);
+            Model.Direction.Subscribe(UpdateImpulse).AddTo(_disposables);
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            OnDealDamage = null;
+            _disposables.Dispose();
         }
 
-        private void UpdateImpulse()
+        private void UpdateImpulse(Vector3 impulse)
         {
-            _rigidbody.AddForce(Model.Direction * _rigidbody.mass * Model.Speed, ForceMode.Impulse);
+            _rigidbody.AddForce(impulse * _rigidbody.mass * Model.Speed.Value, ForceMode.Impulse);
         }
         
         public void OnTriggerEnter(Collider other)
@@ -33,7 +36,7 @@ namespace Features.GameItems.BulletItem
             var dmg = other.gameObject.GetComponent<IDamageable>();
             if (dmg == null) return;
             
-            OnDealDamage?.Invoke(dmg);
+            _onDealDamage.OnNext(dmg);
         }
 
         private void ResetSpeed()

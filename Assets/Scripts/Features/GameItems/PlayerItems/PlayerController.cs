@@ -2,6 +2,7 @@
 using Features.Configs.GameConfig;
 using Features.GameItems.Base;
 using Installers;
+using UniRx;
 using UnityEngine;
 
 namespace Features.GameItems.PlayerItems
@@ -13,22 +14,24 @@ namespace Features.GameItems.PlayerItems
 
         public override void Initialize()
         {
+            Disposables = new CompositeDisposable();
             SignalBus.Subscribe<ChangeGameStateSignal>(OnGameStateChanged);
             _levelSize = ConfigManager.GetConfig<GameConfigs, GameConfig>().levelSize;
+            
+            View.OnTakeDamage.Subscribe(TakeDamage).AddTo(Disposables);
+            View.OnMovementComplete.Subscribe(_ => OnMovementFinished()).AddTo(Disposables);
         }
         
         public override void Dispose()
         {
             SignalBus.Unsubscribe<ChangeGameStateSignal>(OnGameStateChanged);
+            Disposables.Dispose();
         }
 
         public override void Bind(PlayerView view, PlayerModel model)
         {
             View = view;
             Model = model;
-
-            View.OnTakeDamage += TakeDamage;
-            View.OnMovementComplete += OnMovementFinished;
         }
 
         private void OnGameStateChanged(ChangeGameStateSignal gameStateSignal)
@@ -47,14 +50,14 @@ namespace Features.GameItems.PlayerItems
         private void Move()
         {
             Vector3 target = Vector3.forward * _levelSize.y;
-            Model.Position = target;
+            Model.Position.Value = target;
         }
         
         private void TakeDamage(float amount)
         {
-            Model.Health = Mathf.Clamp(Model.Health - amount, 0, Model.MaxHealth);
+            Model.Health.Value = Mathf.Clamp(Model.Health.Value - amount, 0, Model.MaxHealth.Value);
 
-            if (Model.Health <= 0)
+            if (Model.Health.Value <= 0)
                 OnItemDead();
         }
 

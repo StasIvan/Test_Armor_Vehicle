@@ -10,15 +10,10 @@ namespace Features.GameItems.Base
         [SerializeField] protected Rigidbody _rigidbody;
         protected Transform _transform;
         protected TModel Model;
-        private Action<ChangedFields> _modelChangedCallback;
 
         public virtual void Bind(TModel model)
         {
-            if (Model != null && _modelChangedCallback != null)
-                Model.OnChanged -= _modelChangedCallback;
-
             Model = model;
-            Model.OnChanged += OnModelChanged;
         }
 
         public virtual void Initialize()
@@ -28,10 +23,8 @@ namespace Features.GameItems.Base
 
         public virtual void Dispose()
         {
-            if (Model != null && _modelChangedCallback != null)
-                Model.OnChanged -= _modelChangedCallback;
         }
         
-        public abstract void OnModelChanged(ChangedFields field);
+        
     }
 }

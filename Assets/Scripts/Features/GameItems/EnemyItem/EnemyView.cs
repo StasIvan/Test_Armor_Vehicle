@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Core.Interfaces;
 using Features.GameItems.Base;
+using UniRx;
 using UnityEngine;
 using Zenject;
-using static Features.GameItems.Base.ChangedFields;
 
 namespace Features.GameItems.EnemyItem
 {
@@ -15,12 +15,18 @@ namespace Features.GameItems.EnemyItem
         [SerializeField] private GameItemHealth _health;
         [SerializeField] private Billboard _billboard;
         private DiContainer _container;
-
-        private readonly Dictionary<ChangedFields, Action> _updateActions = new();
-        public event Action<IDamageable> OnDealDamage;
-        public event Action<float> OnTakeDamage;
-        public event Action<Transform> OnFindTarget;
-
+        
+        private CompositeDisposable _disposables;
+        
+        private readonly Subject<IDamageable> _onDealDamage = new();
+        public IObservable<IDamageable> OnDealDamage => _onDealDamage;
+        
+        private readonly Subject<float> _onTakeDamage = new();
+        public IObservable<float> OnTakeDamage => _onTakeDamage;
+        
+        private readonly Subject<Transform> _onFindTarget = new();
+        public IObservable<Transform> OnFindTarget => _onFindTarget;
+        
         [Inject]
         public void GetContainer(DiContainer container)
         {
@@ -30,76 +36,66 @@ namespace Features.GameItems.EnemyItem
         public override void Initialize()
         {
             base.Initialize();
+            
+            _disposables = new CompositeDisposable();
+            
             _container.Inject(_billboard);
-
-            _updateActions.Add(Position, UpdatePosition);
-            _updateActions.Add(Rotation, UpdateRotation);
-            _updateActions.Add(Animate, SetAnimation);
-            _updateActions.Add(Health, UpdateHealth);
-            _updateActions.Add(MaxHealth, SetMaxHealth);
-            _updateActions.Add(ResetSpeed, Reset);
+            
+            Model.Position.Subscribe(UpdatePosition).AddTo(_disposables);
+            
+            Model.Rotation.Subscribe(UpdateRotation).AddTo(_disposables);
+            
+            Model.Animation.Skip(1).Subscribe(SetAnimation).AddTo(_disposables);
+            
+            Model.MaxHealth.Subscribe(SetMaxHealth).AddTo(_disposables);
+            
+            Model.Health.Subscribe(UpdateHealth).AddTo(_disposables);
+            
+            Model.OnResetSpeed.Subscribe(_ => ResetSpeed()).AddTo(_disposables);
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            
-            OnDealDamage = null;
-            OnTakeDamage = null;
-            OnFindTarget = null;
-            _updateActions.Clear();
-        }
-
-        public override void Bind(EnemyModel model)
-        {
-            base.Bind(model);
-            
-            SetMaxHealth();
+            _disposables.Dispose();
         }
         
-        public override void OnModelChanged(ChangedFields field)
-        {
-            if (!_updateActions.TryGetValue(field, out var action)) throw new TypeAccessException();
-
-            action.Invoke();
-        }
-
         public void SetTarget(Transform target)
         {
-            OnFindTarget?.Invoke(target);
+            _onFindTarget.OnNext(target);
         }
         
         public void TakeDamage(float amount)
         {
-            OnTakeDamage?.Invoke(amount);
+            _onTakeDamage.OnNext(amount);
         }
 
-        private void UpdateRotation()
+        private void UpdateRotation(Quaternion rotation)
         {
-            _transform.rotation = Model.Rotation;
+            _transform.rotation = rotation;
         }
 
-        private void UpdatePosition()
+        private void UpdatePosition(Vector3 position)
         {
-            _rigidbody.MovePosition(Model.Position);
+            _rigidbody.MovePosition(position);
         }
 
-        private void SetAnimation()
+        private void SetAnimation((string name, bool value) animate)
         {
-            _animator.SetBool(Model.Animation.Item1, Model.Animation.Item2);
+            _animator.SetBool(animate.Item1, animate.Item2);
         }
 
-        private void UpdateHealth()
+        private void UpdateHealth(float health)
         {
-            _health.SetHealth(Model.Health);
+            _health.SetHealth(health);
         }
 
-        private void SetMaxHealth()
+        private void SetMaxHealth(float health)
         {
-            _health.Initialize(Model.MaxHealth);
+            _health.Initialize(health);
         }
 
-        private void Reset()
+        private void ResetSpeed()
         {
             _rigidbody.velocity = Vector3.zero;
         }
@@ -109,7 +105,7 @@ namespace Features.GameItems.EnemyItem
             var dmg = other.gameObject.GetComponent<IDamageable>();
             if (dmg == null) return;
 
-            OnDealDamage?.Invoke(dmg);
+            _onDealDamage.OnNext(dmg);
         }
     }
 }

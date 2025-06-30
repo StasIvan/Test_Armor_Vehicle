@@ -46,7 +46,7 @@ namespace Features.GameItems.EnemyItem
 
         public void Stop()
         {
-            _model.Animation = (_animationName, false);
+            _model.Animation.Value = (_animationName, false);
 
             _model.ResetSpeed();
 
@@ -78,7 +78,7 @@ namespace Features.GameItems.EnemyItem
                 await GoToPointAsync(() => destination, _patrolSpeed, ct);
                 if (ct.IsCancellationRequested) return;
 
-                _model.Animation = (_animationName, false);
+                _model.Animation.Value = (_animationName, false);
 
                 float delay = UnityEngine.Random.Range(
                     _delayBetweenMove - 0.5f, _delayBetweenMove + 0.5f);
@@ -89,8 +89,8 @@ namespace Features.GameItems.EnemyItem
 
         private async UniTask PursueAsync(CancellationToken ct)
         {
-            await GoToPointAsync(() => _target ? _target.position : _model.Position,
-                _model.Speed, ct);
+            await GoToPointAsync(() => _target ? _target.position : _model.Position.Value,
+                _model.Speed.Value, ct);
         }
 
         private async UniTask GoToPointAsync(
@@ -98,26 +98,26 @@ namespace Features.GameItems.EnemyItem
             float speed,
             CancellationToken ct)
         {
-            _model.Animation = (_animationName, true);
+            _model.Animation.Value = (_animationName, true);
 
             while (!ct.IsCancellationRequested)
             {
                 Vector3 targetPos = targetProvider();
-                if (Vector3.Distance(_model.Position, targetPos) <= 0.1f) break;
+                if (Vector3.Distance(_model.Position.Value, targetPos) <= 0.1f) break;
 
-                Vector3 dir = (targetPos - _model.Position).normalized;
+                Vector3 dir = (targetPos - _model.Position.Value).normalized;
                 Quaternion look = Quaternion.LookRotation(dir);
 
-                _model.Rotation = Quaternion.RotateTowards(
-                    _model.Rotation, look, _model.RotationSpeed * Time.fixedDeltaTime);
+                _model.Rotation.Value = Quaternion.RotateTowards(
+                    _model.Rotation.Value, look, _model.RotationSpeed.Value * Time.fixedDeltaTime);
 
-                _model.Position += _model.Rotation * Vector3.forward * (speed * Time.fixedDeltaTime);
+                _model.Position.Value += _model.Rotation.Value * Vector3.forward * (speed * Time.fixedDeltaTime);
 
                 await UniTask.Yield(PlayerLoopTiming.FixedUpdate, ct);
             }
 
             if (!ct.IsCancellationRequested)
-                _model.Animation = (_animationName, false);
+                _model.Animation.Value = (_animationName, false);
         }
 
         private Vector3 GetRandomPatrolPoint()
@@ -132,7 +132,7 @@ namespace Features.GameItems.EnemyItem
             offset.x = Mathf.Clamp(offset.x, -halfX, halfX);
             offset.z = Mathf.Clamp(offset.z, 0, _levelSize.y);
 
-            return _model.Position + offset;
+            return _model.Position.Value + offset;
         }
     }
 }

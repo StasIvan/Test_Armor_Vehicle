@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using Cysharp.Threading.Tasks;
 using Features.GameItems.Base;
+using UniRx;
 using UnityEngine;
 
 namespace Features.GameItems.BulletItem
@@ -15,11 +16,14 @@ namespace Features.GameItems.BulletItem
 
         public override void Initialize()
         {
+            Disposables = new CompositeDisposable();
+            View.OnDealDamage.Subscribe(DealDamage).AddTo(Disposables);
         }
 
         public override void Dispose()
         {
             KillToken();
+            Disposables.Dispose();
             Stop();
         }
         
@@ -27,14 +31,13 @@ namespace Features.GameItems.BulletItem
         {
             View = view;
             Model = model;
-            view.OnDealDamage += DealDamage;
         }
         
         public void Move(Vector3 direction)
         {
             KillToken();
-            
-            Model.Direction = direction;
+            //Debug.Log("HashCode = "+ Model.GetHashCode() + " Move = " + direction);
+            Model.Direction.Value = direction;
             
             _token = new CancellationTokenSource();
             
@@ -48,7 +51,7 @@ namespace Features.GameItems.BulletItem
 
         private void DealDamage(IDamageable target)
         {
-            target.TakeDamage(Model.Damage);
+            target.TakeDamage(Model.Damage.Value);
             Release();
         }
         
